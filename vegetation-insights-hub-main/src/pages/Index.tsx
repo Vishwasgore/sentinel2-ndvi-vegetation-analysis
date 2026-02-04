@@ -6,6 +6,7 @@ import InsightsPanel from "@/components/InsightsPanel";
 import ColorLegend from "@/components/ColorLegend";
 import InfoSection from "@/components/InfoSection";
 import Footer from "@/components/Footer";
+const API_BASE = import.meta.env.VITE_API_URL;
 
 const Index = () => {
   const [imageUrl, setImageUrl] = useState<string | null>(null);
@@ -23,13 +24,10 @@ const Index = () => {
       /* ===============================
          1️⃣ FETCH NDVI IMAGE
       =============================== */
-      const imageResponse = await fetch(
-        "http://localhost:8000/compute-ndvi",
-        {
-          method: "POST",
-          body: formData,
-        }
-      );
+      const imageResponse = await fetch(`${API_BASE}/compute-ndvi`, {
+        method: "POST",
+        body: formData,
+      });
 
       if (!imageResponse.ok) {
         throw new Error("Failed to generate NDVI image");
@@ -42,13 +40,10 @@ const Index = () => {
       /* ===============================
          2️⃣ FETCH NDVI STATISTICS (JSON)
       =============================== */
-      const statsResponse = await fetch(
-        "http://localhost:8000/compute-ndvi-json",
-        {
-          method: "POST",
-          body: formData,
-        }
-      );
+      const statsResponse = await fetch(`${API_BASE}/compute-ndvi-json`, {
+        method: "POST",
+        body: formData,
+      });
 
       if (!statsResponse.ok) {
         throw new Error("Failed to compute NDVI statistics");
@@ -60,7 +55,6 @@ const Index = () => {
 
       // 🔥 THIS IS THE KEY FIX
       setStats(statsJson.statistics);
-
     } catch (error: any) {
       console.error(error);
       alert(error.message || "NDVI computation failed");
